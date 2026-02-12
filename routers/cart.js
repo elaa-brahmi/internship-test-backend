@@ -2,6 +2,33 @@ const express = require('express');
 const supabase = require('../config/supabase');
 const router = express.Router();
 
+/**
+ * @swagger
+ * /api/cart/add:
+ *   post:
+ *     summary: Add a product to the cart
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: string
+ *               quantity:
+ *                 type: integer
+ *                 default: 1
+ *     responses:
+ *       200:
+ *         description: Product added or quantity updated
+ *       400:
+ *         description: Bad request or insufficient stock
+ *       404:
+ *         description: Product not found
+ *       500:
+ *         description: Server error
+ */
 router.post('/add', async (req, res) => {
   const { productId, quantity = 1 } = req.body;
 
