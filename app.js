@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const productRoutes = require('./routers/products');
@@ -11,4 +12,4 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server sprinting on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -33,5 +33,26 @@ router.post('/', async (req, res) => {
   if (error) return res.status(400).json({ error: error.message });
   res.status(201).json(data[0]);
 });
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
 
+  delete updates.id;
+
+  const { data, error } = await supabase
+    .from('products')
+    .update(updates)
+    .eq('id', id)
+    .select(); 
+
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+
+  if (data.length === 0) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  res.json({ message: "Product updated successfully", product: data[0] });
+});
 module.exports = router;

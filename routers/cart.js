@@ -22,9 +22,10 @@ router.post('/add', async (req, res) => {
   const currentCartQuantity = existingCartItem ? existingCartItem.quantity : 0;
   const newTotalQuantity = currentCartQuantity + quantity;
 
-  if (product.stock < newTotalQuantity) {
-    return res.status(400).json({ 
-      error: `Insufficient stock. You have ${currentCartQuantity} in cart and only ${product.stock} available.` 
+  // Ensure there is enough stock to add this quantity
+  if (product.stock < quantity) {
+    return res.status(400).json({
+      error: `Insufficient stock. Only ${product.stock} available.`
     });
   }
 
@@ -49,6 +50,16 @@ router.post('/add', async (req, res) => {
   }
 
   if (resultError) return res.status(500).json({ error: resultError.message });
+
+  // Decrease product stock in the database by the quantity added to cart
+  const { error: stockUpdateError } = await supabase
+    .from('products')
+    .update({ stock: product.stock - quantity })
+    .eq('id', productId);
+
+  if (stockUpdateError) {
+    return res.status(500).json({ error: stockUpdateError.message });
+  }
 
   res.json({ 
     message: existingCartItem ? "Quantity updated" : "Product added to cart", 
