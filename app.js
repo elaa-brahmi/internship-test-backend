@@ -40,8 +40,13 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Local routes
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
+
+// Netlify  routes (/.netlify/functions/api/ + path)
+app.use('/products', productRoutes);
+app.use('/cart', cartRoutes);
 
 if (require.main === module) {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
