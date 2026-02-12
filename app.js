@@ -12,6 +12,14 @@ app.use(express.json());
 
 const PORT = process.env.PORT ;
 
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
